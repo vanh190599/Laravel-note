@@ -1,0 +1,646 @@
+
+<meta charset="utf-8">
+<style type="text/css">
+	body, pre{font-size: 15px;}
+</style>
+<pre>
+=============== LARAVEL ==================
+- tao 1 project: composer create-project laravel/laravel project_name
+- tao 1 bang + model: php artisan make:migration name -m
+- doi ten de ket noi Database->sau do: php artisan migrate -> len ket pj voi db
++ .env dong 12 13 14
++ config->database: 51 52 53
+
+------------------------------------------------------------------------------------------------------------------
+php artisan make:...
+make
+  make:auth            Scaffold basic login and registration views and routes
+  make:controller      Create a new controller class
+  make:exception       Create a new custom exception class
+  make:mail            Create a new email class
+  make:middleware      Create a new middleware class
+  make:migration       Create a new migration file
+  make:model           Create a new Eloquent model class
+
+------------------------------------------------------------------------------------------------------------------
+===== Query ======
+1, Query Builder: (DB::table)
+	+ vd: $users = DB::table('users')->get();
+2, Eloquent ORM (chu y quy tat dat ten vd: db: posts/ model: post) ->bao mat cao hon Qr builder
+	+ vd: $users = User::find(1);
+	+ vd: insert: 	$user = new User;
+			$user->email = 'test@gmail.com';
+$user->save();
+3, Full sql: 
+
+4. linh tinh
+ - truy van voi get(): $users = App\Models\User::where('id', '>', '10')->get();
+ - chu y mang kieu Object ->dung dc foreach/ cach goi kieu Obj: vd: $data->name
+ - mang thuong vd: arr = array('anh'=>anh, 'em'=>em)
+		-> cach goi: echo arr["anh"];
+ - hien dau cham: number_format("1000000",0,",",".")
+ - Join query builder:
+	$new_product = DB::table('tbl_products')
+            ->join('tbl_brands', 'tbl_products.brand_id', '=', 'tbl_brands.brand_id')
+            ->where('product_status', 1)->orderBy('product_id', 'desc')->paginate(12);
+
+- //get product_id after insert ORM
+$product_id = Product::create($data)->product_id;
+
+- click upload file hien thi hinh anh (dung javascript):
+	<input type="file" accept="image/*" onchange="loadFile(event)">
+	<img id="output"/>
+	<script>
+	  var loadFile = function(event) {
+	    var output = document.getElementById('output');
+	    output.src = URL.createObjectURL(event.target.files[0]);
+	    output.onload = function() {
+	      URL.revokeObjectURL(output.src) // free memory
+	    }
+	  };
+	</script>
+
+
+~~~~~~~~~~SO sanh Query buider va Eloquent~~~~~~~~~~~~
+1. lay tat ca ban ghi: 
+	+ QB : $users = DB::table('users')->get();
+	+ ORM: $users = User::all();
+2. lay 1 ban ghi theo id:
+	+ QB: $users = DB::table('users')->where('id', 1)->first();
+	+ ORM: $users = User::find(1); -> trong find hinh nhu chi find mac dinh truong id.  
+3. lay ra 1 truong cua ban ghi:
+	+ QB: $name = DB::table('users')->where('id', 1)->value('name');
+	+ ORM: $name = User::where('id', 1)->value('name')
+-> lay ra truong 'name' co id = 1
+4. Insert: + QB: addUser = DB::table('users')->insert(
+   			  ['email' => 'test@gmail.com']
+		 );
+	   + ORM: $user = new User;
+		  $user->email = 'test@gmail.com';
+		  $user->save();
+	   ---> chu thu: $user = $reqest::all();
+5. update/ Edit:
+	+ QB: editUser = DB::table('users')->where('id', 1)->update(['name' => 'nameTest']);
+	+ ORM:  $user = User::find(1);   -> tìm rồi gán
+		$user->name ='nameTest'; -> chưa thử: $user = $request::all();
+		$user->save();
+6. Delete:
+	+ QB: deleteUser = DB::table('users')->where('id', '=', '1')->delete();
+	+ ORM: $user = User::find(1);
+	       $user->delete();   || $user->destroy();
+7. $users = DB::table('users')->count();
+		->delete();
+		->max('...');
+------------------------------------------------------------------------------------------------------------------
+Session:
+session()->put(‘name session’,’value)’);
+session('name');
+session()->forget(‘name session’); -> xoa 1 session
+session()->flush();		   -> xoa toan bo session
+------------------------------------------------------------------------------------------------------------------
+Ajax
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#noidung").load("b.php");
+	});
+</script>
+ --> hàm load bê nguyên HTML của trang b sang
+
+Hàm GET
+	Trang a.php
+		//b.php?ten=VanAnh
+		$.get("b.php", {ten:"VanAnh"}, function (data) {
+			$("#noidung").html(data);
+		})
+	Trang b.php
+		<?php 
+			$ten = $_GET["ten"];
+			echo $ten;
+		 ?>
+
+Hàm POST
+	Trang a.php
+		$.post("b.php", {ten:"VanAnh"}, function (data) {
+			$("#noidung").html(data);
+		})
+	Trang b.php
+		<?php 
+			$ten = $_POST["ten"];
+			echo $ten;
+		 ?>
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------
+link ao trong laravel/ virtual host
+phan quyen admin
+------------------------------------------------------------------------------------------------------------------
+
+
+
+
+======Xam lin========
+- js chay trc submit chay sau:
+
+- @secssion/ @yield()/ 
+- @if(session('add')!=null) {{session('add')}} @else @endif
+
+======= LARAVEL-PHP-40 ==========
+- Laravel la php framework
+- Trang chu laravel: http://laravel.com
+- Cac buoc cai dat laravel
+	- Cai dat composer
+		- Truy cap website: getcomposer.org -> download -> install.exe
+		- Khi cai xong composer, mo cua so cmd sau do go lenh: composer , neu xuat hien >5 dong thong tin co nghia la cai dat composer thanh cong
+	- Cai dat laravel
+		- Truy cap vao thu muc htdocs -> click chuot phai se xuat hien cua so phai cua chuot
+			- Chon "open command windows here"
+				- Doi voi windows < 10 se hien thi cua so cmd
+			- Doi voi windows 10: go chu cmd tren url de hien thi cua so cmd
+		- Trong cua so cmd go lenh sau de cai dat laravel:
+			composer create-project --prefer-dist laravel/laravel php40_laravel
+			Khi do composer se ket noi len server de download va cai dat laravel ve may
+- Truy cap laravel theo duong dan:
+	- http://localhost/php40_laravel/public
+	- Co the cau hinh cong truy cap cua laravel bang cach thuc hien
+		- truy cap thu muc php40_laravel -> click chuot phai -> chon open command window here (hoac go chu cmd tren url)
+		- chay dong lenh sau trong composer: php artisan serve -> khi do truy cap duong dan sau (hoac duong dan tren) de truy cap laravel: http://localhost:8000
+- Laravel hoat dong theo mo hinh MVC
+	- Model tai duong dan App\cac file model
+	- Tao file model bang lenh composer: php artisan make:model tenfile
+	- Controller: tai duong dan App\Http\Controllers\Cac file controller
+		- Cac file controller co cau truc: tenfileController.php
+		- Tao file controller bang composer: php artisan make:controller tenfileController
+	- View: tai duong dan resource\views\cac file view
+		- Cac file view co cau truc: tenfile.blade.php (cac file view hoat dong theo template blade engine)
+- Tat ca image, js, css... se nam trong thu muc public		
+- Nguyen tac de hien thi website: tu duong dan tren url -> se truy cap duong dan tuong ung de hien thi website
+	- Trong laravel co mot file de dieu phoi url -> file nay se goi cac thanh phan can thiet de xu ly va hien thi
+	- file routes\web.php se dieu phoi url de xu ly -> dieu phoi duong dan ao	
+- Cu phap trong file web.php
+	- Voi phuong thuc GET
+		Route::get("duongdanao",function(){ code php });
+		Route::get("duongdanao",function(){ return view("tenview"); }); -> goi view de hien thi
+		Route::get("duongdanao/{bien1}/{bien2}",function($bien1,$bien2){}); -> truyen bien len url
+		Route::get("duongdanao","tenfileController@tenham");-> goi action trong controller
+		- Truyen bien len url theo cach truyen thong: sau dau ? la danh sach cac bien
+			Route::get("duongdanao",function(){
+				su dung doi tuong Request::get("tenbien") de lay gia tri cua bien tu url
+			});
+		- Co the group duong dan ao theo tag chung (co ten chung tren url)
+			Route::group(array("prefix"=>"tentag"),function(){
+				Route::get("duong dan ao sau tag chung",function(){code});
+			});
+	- Voi phuong thuc POST
+		- Giong voi phuong thuc GET, thay tu get bang tu post
+	- Voi phuong thuc dung chung cho ca POST, GET		
+		- Giong voi phuong thuc GET, thay tu get bang tu any
+- Cac ky hieu su dung trong blade engine
+	- Xuat thong thong bao (tuong duong lenh echo)
+		- {{ "chuoi" }} hoac {{ "chuoi1"."chuoi2" }} hoac {{ $bien }} -> xuat ky hieu html nguyen mau		
+		- {!! "chuoi" !!} , {!! $bien !!} -> xuat ky hieu html ma hoa. VD &gt se xuat la < hoac &lt se xuat len man hinh la >
+	- Khoi lenh if
+		@if(dieukien)
+			html + code
+		@else if(dieukien)
+			html + code
+		@else
+			html + code
+		@endif
+	- vong lap for
+		@for(batdau; ketthuc; tanggiam)
+			html + code
+		@endfor
+	- vong lap foreach
+		@foreach($bien as $key=>$value)
+			html + code
+		@endforeach
+- Load file template vao file view
+	- Trong file view, load file mot file khac vao view bang lenh
+		@extends("tenthumuc.tenview")
+	- Do du lieu tu view ra file khac (file layout)
+		@section("ten tag trong file layout")		
+			php + html
+		@endsection
+- Ham url("duong dan ao") se tao url, thuong dat trong thuoc tinh href cua the a
+================================
+- setup csdl cua project laravel
+	1. Tao database co ten: php40_laravel
+	2. open file .env, thay cac thong so ket noi den csdl tai dong 12,13,14
+		DB_DATABASE=php40_laravel
+		DB_USERNAME=root
+		DB_PASSWORD=
+	3. trong cmd (cmd tai dia chi ben trong project) chay lenh sau (phai cai dat composer truoc khi thuc hien lenh nay): php artisan migrate  -> khi do laravel se tu dong ket noi csdl va tao mot so table trong database
+- Ham Hash::make("chuoi can ma hoa") se ma hoa chuoi password
+- Mot so thao tac csdl: su dung doi tuong DB de thao tac
+	- Truy van co dieu kien, tra ve tat ca cac ban ghi
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->get();
+	- chon lua cac cot can hien thi
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->select(cot1, cot2, cot-n)->get() hoac first() hoac paginate();
+	- Co the truyen full sql vao truy van
+		DB::table("tenbang")->select("select * from tenban where ....");
+	- Phan trang
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->paginate(so-ban-ghi-tren-mot-trang)
+		trong view: {{$data->render()}}
+	- Lay mot ban ghi
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->first()
+	- order by
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->orderBy("tencot","asc/desc")->get() hoac paginate() hoac first()
+	- Dem so luong ban ghi
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->Count()
+	- limit
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->orderBy("tencot","asc/desc")->offset(tu-ban-ghi-nao)->take(lay-bao-nhieu-ban-ghi)->get() hoac paginate() hoac first()
+	- insert
+		DB::table("tenbang")->insert(array("cot1"=>giatri1,"cot-n"=>giatri-n));
+	- update
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->update(array("cot1"=>giatri1,"cot-n"=>giatri-n));
+	- delete
+		DB::table("tenbang")->where("tencot","sosanh","giatri")->delete();
+=====================
+- Xay dung website bang laravel bao gom cac buoc
+	1. Tao chuc nang dang nhap, dang xuat
+	2. Thuc hien cac chuc nang backend
+	3. Thuc hien cac chuc nang frontend
+1. Tao chuc nang dang nhap
+	- Trong composer go lenh: php artisan make:auth  
+		- khi do laravel se tu dong tao thanh phan authentication
+		- trong file web.php se xuat hien 2 dong code cua thanh phan nay
+		Auth::routes();
+		Route::get('/home', 'HomeController@index')->name('home'); -> dong nay co the bo di hoac comment lai
+2. Thuc hien cac chuc nang backend
+	- Cac chuc nang backend se dat trong group co tag chung la admin
+	Route::group(array("prefix"=>"admin"),function(){
+		//chuc nang user
+		Route::get("user","userController@list_user");-> tao controller userController bang lenh composer: php artisan make:controller userController
+		//--------------
+	});
+
+							============= NHUNG LUU Y TRONG PROJECT E-SHOPER =============
+
+1/ // Xac thu dang nhap
+    public function AuthLogin(){
+        $admin_id = session('admin_id');
+        if(!$admin_id){
+            return false;
+        }
+        return true;
+    }
+ // kiem tra: if(!$this->AuthLogin()){
+           	 return redirect('admin');
+      	      }
+2/ them tat ca du lieu voi du lieu lay tu request
+	$data = $request->all();
+        $product = tbl_category::create($data);
+        return redirect('list-category')->with('add', 'thêm thành công !');
+
+3/ lay 1 ban ghi duy nhat:
+	$record = DB::table('tbl_categories')->where('category_id', $category_id)->first();
+
+4/ Update:
+
+        $obj = tbl_category::where('category_id', '=', $category_id)->update(array(
+            "category_name"=>$category_name,
+            "category_description"=>$category_description,
+            "category_status"=>$category_status,
+        ));
+
+5/ return redirect('list-category')->with('add', 'sửa thành công !');
+ 	-> with nhu 1 session, khi reset lai thi khong con.
+
+6/ Delte: tbl_category::where('category_id', '=', $category_id)->delete();
+
+7/ ham tim kiem:
+
+    public function search_category(Request $request){
+        if(!$this->AuthLogin()){ return redirect('admin'); }
+        $data = DB::table("tbl_categories")
+            ->where('category_name', 'like', '%'.$request->key.'%')
+            ->orWhere('category_description', 'like', '%'.$request->key.'%')
+            ->orderBy("category_id", "desc")->paginate(5);
+        return view('backend.list_category', array("data"=>$data));
+    }
+
+8/ mass: $article = AppUser::create($request->all()); // install::all()
+
+trong model:
+<?php //app/Article.php
+namespace App; 
+use Illuminate\Database\Eloquent\Model;
+class Article extends Model {
+    protected $fillable = ['title', 'body', 'published_at']; 
+}
+
+9/ Add [_token] to fillable property to allow mass assignment on [App\tbl_product].
+- phải thêm protected $fillable = arr trong model moi dung duoc mass
+
+10/ with di theo redirect -> nhu 1 Session -> khi reset trang thi bien mat
+"with" di theo return view() -> nhu 1 bien binh thuong $;
+
+11/ upload-anh
+- trong form bat buoc phat co: type...media
+- them anh:
+	+ lay file anh(bao gom ten, duoi, byte,...) : $get_img = $request->file('name'); // hoac $get_img->reques->name;
+	+ lay ten file: $file_name = time().'_'.$get_image->getClientOriginalName(); //them time() cho đỡ trùng tên
+	+ di chuyển sang mục mới rồi đặt tên mới: $get_image->move('upload/product', $file_name); 
+	//gán tên vừa lấy vào, nhỡ để time(). cho đỡ trùng
+	Code demo:
+
+	public function do_add_product(Request $request){
+        $data = $request->all();
+        $get_image = $request->file('product_image');
+        if($get_image){
+            //lay ten file
+            $file_name = time().'_'.$get_image->getClientOriginalName();
+            //di chuyen sang upload/product
+            $get_image->move('upload/product', $file_name);
+            $data['product_image'] = $file_name;
+            $product = tbl_product::create($data);
+            return redirect('admin/list-product')->with('add', 'thêm thành công !');
+        }
+        //neu nhu khong chon anh:
+        $data['product_image'] = "";
+        $product = new tbl_product;
+        $product = tbl_product::create($data);
+        return redirect('admin/list-product')->with('add', 'thêm thành công !');
+    }
+
+- update/edit/sua product (co anh):
++ y tuong: 
+	lấy ảnh mới
+	kiểm tra xem có up ảnh mới hay ko (hay là vẫn để ảnh cũ, chỉ update những nội dung k)
+		+ nếu không thì chỉ update tất cả trừ File/
+		+ nếu có: 
+			lấy ảnh cũ -> rồi xóa
+			xong rồi lại thực hiện giống add File(lấy tên file, di chuyển sang thư mục public trong LAr)
+			chú ý: bắt đầu từ thư mục con của public chứ ko phải bắt đầu từ public
+	Code Demo:
+
+	public function do_edit_product(Request $request, $product_id){
+        //lay anh moi
+        $get_image = $request->file('product_image');
+        //neu khong click chon anh (van de anh band dau)
+        if(!$get_image){
+            tbl_product::where('product_id','=', $product_id)
+                ->update([
+                    "brand_id" => $request->brand_id,
+                    "category_id" => $request->category_id,
+                    "product_name" => $request->product_name,
+                    "product_price" => $request->product_price,
+                    "product_bao_hanh" => $request->product_bao_hanh,
+                    "product_sale_price" => $request->product_sale_price,
+                    "product_desc" => $request->product_desc,
+                    "product_uu_dai" => $request->product_uu_dai,
+                    "product_so_luong" => $request->product_so_luong,
+                    "product_so_luong_ban" => $request->product_so_luong_ban
+                ]);
+        }
+        //neu co anh moi thi upload anh moi cung data, va xoa anh cu
+        else{
+            //lay anh cu roi xoa:
+            $file_name_old = tbl_product::where('product_id', $product_id)->value('product_image');
+            // dd($file_name_old);
+            if($file_name_old!=NULL){
+                unlink('upload/product/'.$file_name_old);
+            }
+
+            //lay ten file
+            $file_name = time().'_'.$get_image->getClientOriginalName();
+
+            //di chuyen sang upload/product
+            $get_image->move('upload/product', $file_name);
+            tbl_product::where('product_id','=', $product_id)
+                ->update([
+                    "brand_id" => $request->brand_id,
+                    "category_id" => $request->category_id,
+                    "product_name" => $request->product_name,
+                    "product_price" => $request->product_price,
+                    "product_bao_hanh" => $request->product_bao_hanh,
+                    //update ten file anh
+                    "product_image" => $file_name,
+                    "product_sale_price" => $request->product_sale_price,
+                    "product_desc" => $request->product_desc,
+                    "product_uu_dai" => $request->product_uu_dai,
+                    "product_so_luong" => $request->product_so_luong,
+                    "product_so_luong_ban" => $request->product_so_luong_ban
+                ]);
+        }
+        return redirect()->route('list_product')->with('add', "Sửa thành công!");
+    }
+
+- Delete product:
+	+ trước tiên xóa file trong thư mục public
+	+ sau đó truy vấn ORM -> delete Database
+	Code Demo:
+
+	    public function delete_product($product_id){
+     		   //lay ten anh cu
+   		   $file_name = tbl_product::where('product_id', $product_id)->value('product_image');
+      		   if($file_name){
+        		unlink('upload/product/'.$file_name);
+       		   }
+       	 	   tbl_product::where('product_id', '=', $product_id)->delete();
+      		   return redirect('admin/list-product')->with('add', 'Xóa thành công !');
+   	    }
+
+-------------- CART ------------------------------------------------------------------------------------------------------
++ khi thêm sản phẩm vào giỏ hàng mà cùng id-> tự động tăng qty
++ Cart: rowID, name, price, weight
++ có hàm Add,tính tổng, remove, destroy,....
+	Cart::add()
+	Cart::remove($rowId)
+	Cart::update($rowId, 123)  -> ngầm hiểu update Qty của rowID
+-> xem thêm tại: https://packagist.org/packages/bumbummen99/shoppingcart
+
+- Bố trí các bảng: payment, shipping, tbl_order, tbl_order detail
+
+--------------- FACEBOOK GOOGLE ------------------------------------------------------------------------------------------
+
+* Belongs To Relationships
+- Khi cập nhật 1 belongsTo relationship, bạn có thể sử dụng associate method. Method này sẽ set foreign key trên model con.
+
+		$account = App\Account::find(10);
+		$user->account()->associate($account);
+		$user->save();
+
+- Khi loại bỏ belongsTo relationship, bạn có thể sử dụng dissociate method. Method này sẽ thiết lập các foreign key thành null.
+
+		$user->account()->dissociate();
+		$user->save();
+
+
+--- khi dang nhap = fb chi return ve 1 callback
+khi co 2 from login(admin/ customer) -> de biet dc dang nhap bang trang nao thi ta su dung 1 session
+khi thuc hien xong thi nho xoa no di ngay.
+
+--- phan quyen bang = bien ---
++ them truong Authen
+	+ 1: category, brand, product, slide
+	+ 2: gio hang
+	+ 3: tin tuc
+
+----------------------- MAILER ---------------------------
+1. Mailer: 
+(link: tham khao
+	1/ khoa pham: https://www.youtube.com/watch?v=g0WTOjxZID4
+	2/ https://www.youtube.com/watch?v=KajNovXP4Rw
+	3/ https://techtalk.vn/qa/gui-email-trong-laravel-phai-lam-the-nao-a
+)
+- Bước 1:
+	+ tạo 1 tài khoản Gmail -> cài đặt: POP/IMAP
+	+ Tải xuống qua POP: tích bật tất cả
+	+ Quyền truy cập qua IMAP (truy cập Gmail từ ứng dụng khách khác bằng IMAP) : enable
+	link: https://mail.google.com/mail/u/0/#settings/fwdandpop
+	+ Bật quyền truy cập của ứng dụng khác: -> turn on -> save.
+	https://myaccount.google.com/lesssecureapps
+- Bước 2: cấu hình trong .env
+	MAIL_DRIVER=smtp
+	MAIL_HOST=smtp.gmail.com
+	MAIL_PORT=587
+	MAIL_USERNAME=GmailAddress
+	MAIL_PASSWORD=GmailAppPassword
+	MAIL_ENCRYPTION=tls
+
+	-> sau đó chạy command để xóa bộ đệm và khởi động lại máy chủ Laravel: php artisan config:cache
+
+- Bước 3: tạo 1 route + Controller + function
+public function test()
+    {
+        $data = array();
+        Mail::send ( 'frontend.email_blank', $data, function ($sendemail) {
+            $sendemail->from ( 'anh195np2@gmail.com', 'VAstore');
+            $sendemail->to ( 'facebook19051999@gmail.com', 'Van Anh' )->subject ('gui thanh cong') ;
+        });
+    }
+
+*note: frontend.email_blank -> 1 trang trắng (k cần thiết)
+
+------------- Login Facebook + google ---------------
+
+Ý tưởng: khi click đăng nhập facebook -> chuyển trang đăng nhập của facebook -> sau đăng nhập facebook sẽ gọi hàm callback (đường dẫn cho mình định nghĩa) , còn lại ta sẽ code hàm callback để insert dữ liệu cho hợp lý
+
++ Bước 1: Cài đặt plugin composer require laravel/socialite
++ Bước 2: tạo 1 facebook API (có thể tham khảo trên mạng)
++ Bước 3: 
+	+ có sẵn bảng tbl_cusotmer (customer_id, customer_name, ...)
+	+ Tạo tbl_social -> với 3 cột (user_id,provider_user_id,provider,user) 
+		-> provider_user_id: id lấy được của người dùng Facebook,
+		-> user : khóa phụ liên kết với bảng thông tin người dùng của ta từ ban đầu (tbl_customer)
+			liên kết tbl_social.user = tbl_customer.id (khi thêm mới bảng cusotmer thì cũng thêm mới bảng social với user = customer_id)
+
++ bước 4: Mở file env và copy dòng này vào
+		FACEBOOK_APP_ID=208251227064009
+		FACEBOOK_APP_SECRET=2d1c4a61ec283b1e63a484860f290b59
+
+		FACEBOOK_REDIRECT=http://localhost/laravel/la_project/callback    -> hàm để gọi callback sau khi đăng nhập ở facebook
++ Bước 5: Mở file trong folder config/app.php  ,copy dòng này vào  
+		Laravel\Socialite\SocialiteServiceProvider::class,   			 //cho provider
+		'Socialite' => Laravel\Socialite\Facades\Socialite::class,       //cho alias
+
++ Bước 6: Route:
+		Route::get('login-facebook', 'loginFacebook@login_facebook');
+		Route::get('callback','loginFacebook@callback_facebook'); //khi dang nhap se goi den ham nay
+
++ Bước 7 viết hàm Callback ( Quan trọng nhất :D ) 
+	Ý tưởng: + nếu đã đăng nhập rồi thì gọi Callback
+
+	CALLBACK:
+	- kiểm tra thông tin người dùng facebook đã có trong tbl_social chưa (provider_user_id,...)
+		+ RỒI: lấy thông tin đã lưu ở tbl_admin -> Login
+		(Không nến lấy trực tiếp từ facebook vì trong admin có thể mình đã thay đổi tên, hoặc người đó thay đổi tên và ta cũng có thông tin của người mua hàng =)) . nói chung là lấy thông tin tbl_admin )
+		+ CHƯA: Thêm thông tin người đó vào tbl_admin đồng thời cũng thêm thông tin vào tbl_social.
+		-> LOGIN
+
+	-> XONG! google tương tự
+
+<p style="color: red">Code demo:</p>
+<?php
+	namespace App\Http\Controllers;
+	use App\customer;
+	use Illuminate\Http\Request;
+	use DB;
+	use Session;
+	use Illuminate\Support\Facades\Redirect;
+	use Illuminate\Support\Facades\Blade;
+	use App\social;
+	use Socialite;
+	use App\login; //customer giong voi login -> dung facebook login nen thử tao mới :D
+	use Carbon\Carbon;
+	session_start();
+
+	class loginFacebook extends Controller
+	{
+	    //login = facebook-----------------------------------------------------------
+	    public function login_facebook(){
+	        // di chuyen login facebook -> tra ve Callback
+	        return Socialite::driver('facebook')->redirect();
+	    }
+	    //nếu đăng nhập rồi thì sử dụng call back để gọi về luôn
+	    public function callback_facebook(){
+	        //kiem tra ton tai trong tbl_social chua: Roi -> login (infor tu tbl_customer)
+	        $user_facebook = Socialite::driver('facebook')->user(); // lấy thông tin người dùng facebook
+	        $check_into_tbl_social = DB::table('tbl_social')->where('provider_user_id', $user_facebook->getId())->where('provider','facebook')->first();
+	        if($check_into_tbl_social){
+	            //login
+	            $get_customer = DB::table('tbl_customer')->where('customer_id', $check_into_tbl_social->user )->first();
+	            session()->put('customer_avatar', $user_facebook->avatar );
+	            session()->put('customer_id', $get_customer->customer_id );
+	            session()->put('customer_name', $get_customer->customer_name );
+	            session()->put('customer_email', $get_customer->customer_email );
+	            session()->put('check_change_password', 'dont-show' ); //check view change password
+	            return redirect('trang-chu')->with('message-login', 'đăng nhập thành công');
+	        }
+	        //neu chua -> them vao tbl_customer (insertGertID) -> them vao tbl_social (tbl_social.User (PK) = tbl_customer.customer_id(FK) ) <them customer trc thi moi co id de them vao user >
+	        //Co the su dung QRM + hasmany/ belongTo (udate model cha-con)
+	        else{
+	            //insert tbl_customer
+	            $customer_id_insert = DB::table('tbl_customer')->insertGetId(array(
+	                "customer_name"=>$user_facebook->getName(),
+	                "customer_email"=>$user_facebook->getEmail(),
+	                "customer_phone"=>"--tài khoản facebook--",
+	                "customer_password"=>"--tài khoản facebook--",
+	                "created_at"=>Carbon::now()
+	            ));
+	            $customer_just_insert = DB::table('tbl_customer')->where('customer_id', $customer_id_insert )->first();
+	            //inser tbl_social
+	            DB::table("tbl_social")->insert(array(
+	                "provider_user_id"=>$user_facebook->getId(),
+	                "provider"=>"facebook",
+	                "user"=>$customer_id_insert //=$customer_just_insert->customer_id
+	            ));
+	            //login
+	            session()->put('customer_avatar', $user_facebook->avatar );
+	            session()->put('customer_id', $customer_id_insert); //= $customer_just_insert->customer_id
+	            session()->put('customer_name', $customer_just_insert->customer_name );
+	            session()->put('customer_email', $customer_just_insert->customer_email );
+	            session()->put('check_change_password', 'dont-show' ); //check view change password
+	            return redirect('trang-chu')->with('message-login', 'đăng nhập thành công');
+	        }
+	    }
+	}
+	
+	<p style="color: red"><b>Cách 2: sử dụng ORM, hasMany. belongto (code tham khảo của hieutan toturial)</b>></p>
+	
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
